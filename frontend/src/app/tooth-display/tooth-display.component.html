@@ -1,0 +1,330 @@
+@if (isLingual) {
+<div class="tooth-container">
+  <!-- Tooth/Implant Image with Furcation Overlay -->
+  @if (!isLingual) {
+    <div class="top-controls-row">
+      <div class="mobility-indicator" 
+           (click)="cycleMobility($event)"
+           [class.disabled]="isMissing">
+        M{{mobilityLevel}}
+      </div>
+      <div class="implant-checkbox" 
+           (click)="toggleImplant($event)"
+           [class.checked]="isImplant"
+           [class.disabled]="isMissing">
+        <span>I</span>
+      </div>
+    </div>
+  }
+  <div class="tooth-area" (click)="toggleMissingStatus($event)">
+    @if (!isMissing) {
+      <div class="tooth-image-container">
+        @if (isImplant && !isLingual) {
+          <img [src]="'assets/dentistry/implants/' + toothNumber + '.png'" 
+               [alt]="'Implant ' + toothNumber"
+               class="tooth-image"
+               [ngClass]="imageRotation">
+        } @else {
+          <img [src]="'assets/dentistry/teeth/' + toothNumber + '.png'" 
+               [alt]="'Tooth ' + toothNumber"
+               class="tooth-image"
+               [ngClass]="imageRotation">
+        }
+        @if (furcationLevel > 0 && !isImplant && !isLingual) {
+          <div class="furcation-indicator level-{{furcationLevel}}"></div>
+        }
+      </div>
+    } @else {
+      <div class="missing-tooth">
+        <span>X</span>
+      </div>
+    }
+  </div>
+<div class="tooth-contient" style="height: 174px;">
+  <!-- Gingival Margin Controls -->
+  @if (!isMissing) {
+    <div class="gingival-margin-controls">
+      <div class="gingival-input">
+        <input type="number" min="0" max="10" step="1"
+               [(ngModel)]="gingivalMargin.mesial"
+               (change)="onGingivalMarginChange()"
+               (focus)="selectAll($event)">
+      </div>
+      <div class="gingival-input">
+        <input type="number" min="0" max="10" step="1"
+               [(ngModel)]="gingivalMargin.mid"
+               (change)="onGingivalMarginChange()"
+               (focus)="selectAll($event)">
+      </div>
+      <div class="gingival-input">
+        <input type="number" min="0" max="10" step="1"
+               [(ngModel)]="gingivalMargin.distal"
+               (change)="onGingivalMarginChange()"
+               (focus)="selectAll($event)">
+      </div>
+    </div>
+  }
+<!-- Probing Depth Controls -->
+@if (!isMissing) {
+  <div class="probing-depth-controls">
+    <div class="probing-input">
+      <input type="number" min="0" max="15" step="1"
+             [(ngModel)]="probingDepth.mesial"
+             (change)="onProbingDepthChange()"
+             (focus)="selectAll($event)">
+    </div>
+    <div class="probing-input">
+      <input type="number" min="0" max="15" step="1"
+             [(ngModel)]="probingDepth.mid"
+             (change)="onProbingDepthChange()"
+             (focus)="selectAll($event)">
+    </div>
+    <div class="probing-input">
+      <input type="number" min="0" max="15" step="1"
+             [(ngModel)]="probingDepth.distal"
+             (change)="onProbingDepthChange()"
+             (focus)="selectAll($event)">
+    </div>
+  </div>
+}
+
+  <!-- Plaque Controls -->
+  @if (!isMissing) {
+    <div class="plaque-controls">
+      <div class="plaque-checkbox" 
+           (click)="togglePlaque('mesial', $event)"
+           [class.active]="plaque.mesial">
+        
+      </div>
+      <div class="plaque-checkbox" 
+           (click)="togglePlaque('mid', $event)"
+           [class.active]="plaque.mid">
+        
+      </div>
+      <div class="plaque-checkbox" 
+           (click)="togglePlaque('distal', $event)"
+           [class.active]="plaque.distal">
+        
+      </div>
+    </div>
+  }
+
+  <!-- Bleeding Controls -->
+  @if (!isMissing) {
+    <div class="bleeding-controls">
+      <div class="bleeding-checkbox" 
+           (click)="toggleBleeding('mesial', $event)"
+           [class.active]="bleeding.mesial">
+        
+      </div>
+      <div class="bleeding-checkbox" 
+           (click)="toggleBleeding('mid', $event)"
+           [class.active]="bleeding.mid">
+        
+      </div>
+      <div class="bleeding-checkbox" 
+           (click)="toggleBleeding('distal', $event)"
+           [class.active]="bleeding.distal">
+        
+      </div>
+    </div>
+  }
+
+  <!-- Main Controls Row -->
+  <div class="controls-row">
+    <!-- Furcation controls -->
+    @if (showMesialDistalFurcation) {
+      <!-- Show both mesial/distal for specific L molars -->
+      <div class="furcation-button" 
+           (click)="cycleFurcationMesial($event)"
+           [class.disabled]="isMissing || isImplant">
+        FM{{furcation_mesial}}
+      </div>
+      <div class="furcation-button" 
+           (click)="cycleFurcationDistal($event)"
+           [class.disabled]="isMissing || isImplant">
+        FD{{furcation_distal}}
+      </div>
+    }
+    @else if (!isLingual) {
+      <!-- Show regular furcation for non-L teeth -->
+      <div class="furcation-button" 
+           (click)="cycleFurcation($event)"
+           [class.disabled]="isMissing || isImplant">
+        F{{furcationLevel}}
+      </div>
+    }
+    @else{
+      <div style="height: 50px; width: 70px;"></div>
+    }
+  
+    <!-- Only show implant checkbox if not an L tooth -->
+  </div>
+  <div class="tooth-number" style="margin-top: 5px;">{{ isLingual ? '' : toothNumber }} </div>
+  </div>
+</div>
+} @else {
+  <div class="tooth-container">
+    <div class="tooth-contient" style="height: 233px;">
+    <!-- Tooth/Implant Image with Furcation Overlay -->
+    <div class="tooth-number">{{ isLingual ? '' : toothNumber }} </div>
+    @if (!isLingual) {
+      <div class="top-controls-row">
+        <div class="mobility-indicator" 
+             (click)="cycleMobility($event)"
+             [class.disabled]="isMissing">
+          M{{mobilityLevel}}
+        </div>
+        <div class="implant-checkbox" 
+             (click)="toggleImplant($event)"
+             [class.checked]="isImplant"
+             [class.disabled]="isMissing">
+          <span>I</span>
+        </div>
+      </div>
+    }
+
+     <!-- Main Controls Row -->
+     <div class="controls-row">
+      <!-- Furcation controls -->
+      @if (showMesialDistalFurcation) {
+        <!-- Show both mesial/distal for specific L molars -->
+        <div class="furcation-button" 
+             (click)="cycleFurcationMesial($event)"
+             [class.disabled]="isMissing || isImplant">
+          FM{{furcation_mesial}}
+        </div>
+        <div class="furcation-button" 
+             (click)="cycleFurcationDistal($event)"
+             [class.disabled]="isMissing || isImplant">
+          FD{{furcation_distal}}
+        </div>
+      }
+      @else if (!isLingual) {
+        <!-- Show regular furcation for non-L teeth -->
+        <div class="furcation-button" 
+             (click)="cycleFurcation($event)"
+             [class.disabled]="isMissing || isImplant">
+          F{{furcationLevel}}
+        </div>
+      }
+
+       <!-- Bleeding Controls -->
+    @if (!isMissing) {
+      <div class="bleeding-controls">
+        <div class="bleeding-checkbox" 
+             (click)="toggleBleeding('mesial', $event)"
+             [class.active]="bleeding.mesial">
+          
+        </div>
+        <div class="bleeding-checkbox" 
+             (click)="toggleBleeding('mid', $event)"
+             [class.active]="bleeding.mid">
+          
+        </div>
+        <div class="bleeding-checkbox" 
+             (click)="toggleBleeding('distal', $event)"
+             [class.active]="bleeding.distal">
+          
+        </div>
+      </div>
+    }
+
+      <!-- Plaque Controls -->
+    @if (!isMissing) {
+      <div class="plaque-controls">
+        <div class="plaque-checkbox" 
+             (click)="togglePlaque('mesial', $event)"
+             [class.active]="plaque.mesial">
+          
+        </div>
+        <div class="plaque-checkbox" 
+             (click)="togglePlaque('mid', $event)"
+             [class.active]="plaque.mid">
+          
+        </div>
+        <div class="plaque-checkbox" 
+             (click)="togglePlaque('distal', $event)"
+             [class.active]="plaque.distal">
+          
+        </div>
+      </div>
+    }
+
+    <!-- Gingival Margin Controls -->
+    @if (!isMissing) {
+      <div class="gingival-margin-controls">
+        <div class="gingival-input">
+          <input type="number" min="0" max="10" step="1"
+                 [(ngModel)]="gingivalMargin.mesial"
+                 (change)="onGingivalMarginChange()"
+                 (focus)="selectAll($event)">
+        </div>
+        <div class="gingival-input">
+          <input type="number" min="0" max="10" step="1"
+                 [(ngModel)]="gingivalMargin.mid"
+                 (change)="onGingivalMarginChange()"
+                 (focus)="selectAll($event)">
+        </div>
+        <div class="gingival-input">
+          <input type="number" min="0" max="10" step="1"
+                 [(ngModel)]="gingivalMargin.distal"
+                 (change)="onGingivalMarginChange()"
+                 (focus)="selectAll($event)">
+        </div>
+      </div>
+    }
+  <!-- Probing Depth Controls -->
+  @if (!isMissing) {
+    <div class="probing-depth-controls">
+      <div class="probing-input">
+        <input type="number" min="0" max="15" step="1"
+               [(ngModel)]="probingDepth.mesial"
+               (change)="onProbingDepthChange()"
+               (focus)="selectAll($event)">
+      </div>
+      <div class="probing-input">
+        <input type="number" min="0" max="15" step="1"
+               [(ngModel)]="probingDepth.mid"
+               (change)="onProbingDepthChange()"
+               (focus)="selectAll($event)">
+      </div>
+      <div class="probing-input">
+        <input type="number" min="0" max="15" step="1"
+               [(ngModel)]="probingDepth.distal"
+               (change)="onProbingDepthChange()"
+               (focus)="selectAll($event)">
+      </div>
+    </div>
+  }
+  
+         <!-- Only show implant checkbox if not an L tooth -->
+      
+    </div>
+    </div>
+    <div class="tooth-area" (click)="toggleMissingStatus($event)">
+      @if (!isMissing) {
+        <div class="tooth-image-container">
+          @if (isImplant && !isLingual) {
+            <img [src]="'assets/dentistry/implants/' + toothNumber + '.png'" 
+                 [alt]="'Implant ' + toothNumber"
+                 class="tooth-image"
+                 [ngClass]="imageRotation">
+          } @else {
+            <img [src]="'assets/dentistry/teeth/' + toothNumber + '.png'" 
+                 [alt]="'Tooth ' + toothNumber"
+                 class="tooth-image"
+                 [ngClass]="imageRotation">
+          }
+          @if (furcationLevel > 0 && !isImplant && !isLingual) {
+            <div class="furcation-indicator level-{{furcationLevel}}"></div>
+          }
+        </div>
+      } @else {
+        <div class="missing-tooth">
+          <span>X</span>
+        </div>
+      }
+    </div>
+  </div>
+}

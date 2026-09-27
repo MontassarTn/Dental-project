@@ -1,0 +1,60 @@
+# Render Blueprint: deploys the whole app on Render's free plan.
+# Render dashboard -> New -> Blueprint -> select this repository.
+# Render then asks for the secrets marked `sync: false` (they are never stored in the repo).
+#
+# The frontend calls the two services at https://<service name>.onrender.com
+# (see frontend/src/environments/environment.ts). Keep the names in sync if you rename them.
+services:
+  # REST API + live chart updates (WebSocket)
+  - type: web
+    name: dental-chart-voice-api
+    runtime: node
+    plan: free
+    region: frankfurt # closest to the MongoDB Atlas cluster (Paris)
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: MONGODB_URI
+        sync: false
+
+  # Voice dictation: AssemblyAI real-time speech-to-text + Groq LLM
+  - type: web
+    name: dental-chart-voice-speech
+    runtime: python
+    plan: free
+    region: frankfurt
+    rootDir: speech-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.2"
+      - key: ASSEMBLYAI_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+
+  # Angular frontend (static files, never sleeps)
+  - type: web
+    name: dental-chart-voice
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/dist/frontend/browser
+    buildFilter:
+      paths:
+        - frontend/**
+    routes:
+      # Let Angular handle deep links such as /chart/PAT001
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: NODE_VERSION
+        value: "22"

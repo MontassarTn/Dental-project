@@ -1,0 +1,194 @@
+<div class="chart-container">
+  <header class="page-header">
+    <div class="brand">
+      <span class="brand-mark"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3C4.8 3 3 4.8 3 7.5c0 3 .8 5.2 1.6 7.3.7 1.9 1 4.2 1.6 5.9.3.9 1.6 1 2 .1.6-1.4.9-3.3 1.5-4.6.3-.7.8-1.2 1.3-1.2s1 .5 1.3 1.2c.6 1.3.9 3.2 1.5 4.6.4.9 1.7.8 2-.1.6-1.7.9-4 1.6-5.9.8-2.1 1.6-4.3 1.6-7.3C21 4.8 19.2 3 17 3c-1.9 0-3 1-5 1S8.9 3 7 3z"/></svg></span>
+      <div>
+        <h1>Dental Project</h1>
+        <p class="subtitle">
+          Periodontal chart
+          @if (patientData) {
+            <span class="sep">·</span> {{ patientData.firstName }} {{ patientData.lastName }}
+            <span class="id-chip">{{ patientData.patientId }}</span>
+          }
+        </p>
+      </div>
+    </div>
+    <a routerLink="/" class="btn-ghost"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg> New patient</a>
+  </header>
+
+  <div class="top-grid">
+    <section class="card status-card">
+      <h2 class="card-title">Periodontal status</h2>
+      <div class="field-grid">
+        <div class="field">
+          <label for="nom">Last name</label>
+          <input type="text" [value]="patientData?.lastName" id="nom" name="nom">
+        </div>
+        <div class="field">
+          <label for="prenom">First name</label>
+          <input type="text" id="prenom" [value]="patientData?.firstName" name="prenom">
+        </div>
+        <div class="field">
+          <label for="dob">Date of birth</label>
+          <input type="date" id="dob" name="dob">
+        </div>
+        <div class="field">
+          <label for="date">Chart date</label>
+          <input type="date" id="date" name="date" [value]="patientData?.createdAt | date:'yyyy-MM-dd'">
+        </div>
+        <div class="field field-wide">
+          <label for="praticien">Practitioner</label>
+          <input type="text" id="praticien" name="praticien" [value]="patientData?.patientId">
+        </div>
+      </div>
+    </section>
+
+    <section class="card voice-card">
+      <div class="voice-intro">
+        <span class="icon-badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></svg></span>
+        <div>
+          <h2 class="card-title">Voice charting</h2>
+          <p>Dictate measurements and the chart fills in live.</p>
+        </div>
+      </div>
+      <app-voice-dictation [patientId]="patientId" />
+    </section>
+  </div>
+
+  <section class="card chart-card">
+    <div class="chart-card-head">
+      <div>
+        <h2 class="card-title">Chart</h2>
+        <p class="card-hint">Click a tooth to mark it as missing.</p>
+      </div>
+      <ul class="legend">
+        <li><span class="swatch swatch-plaque"></span>Plaque</li>
+        <li><span class="swatch swatch-bleeding"></span>Bleeding</li>
+        <li><span class="swatch swatch-furcation"></span>Furcation</li>
+        <li><span class="swatch swatch-implant">I</span>Implant</li>
+        <li><span class="swatch swatch-missing">✕</span>Missing</li>
+      </ul>
+    </div>
+
+    <div class="chart-scroll">
+      <div class="zoom-content" [style.zoom]="zoomLevel / 100">
+  <div class="dental-chart">
+    <!-- Upper Jaw -->
+    <div class="dental-arch upper-jaw">
+      <div class="arch-label">Upper jaw</div>
+      <div class="tooth-section">
+        <!-- Normal Teeth Row -->
+        <div class="tooth-row normal-teeth">
+          <div style="position: relative;">
+            <table style="position: absolute;left: -200px; width: 190px;padding-top: 40px;text-align: right;">
+              <tr><td></td></tr>
+      <tr><td>Mobility</td></tr>
+      <tr><td>Implant</td></tr>
+      <tr><td style="padding-top: 8px;">Furcation</td></tr>
+      <tr><td style="padding-top: 8px;">Bleeding on probing</td></tr>
+      <tr><td style="padding-top: 7px;">Plaque</td></tr>
+      <tr><td style="padding-top: 11px;">Gingival margin</td></tr>
+      <tr><td style="padding-top: 12px;">Probing depth</td></tr>
+      <tr><td style="padding-top: 45px;"><h3>Buccal</h3></td></tr>
+    </table>
+          </div>
+          @for (toothNumber of leftUpperTeeth; track toothNumber) {
+            <app-tooth-display [toothNumber]="toothNumber"></app-tooth-display>
+            @if (+toothNumber === 11) {
+              <div class="tooth-gap"></div>
+            }
+          }
+          @for (toothNumber of rightUpperTeeth; track toothNumber) {
+            <app-tooth-display [toothNumber]="toothNumber"></app-tooth-display>
+          }
+        </div>
+        
+        <!-- Lingual Teeth Row -->
+        <div class="tooth-row lingual-teeth">
+          <div style="position: relative;">
+            <table style="position: absolute;left: -200px; width: 190px;padding-top: 40px;text-align: right;">
+              <tr><td style="padding-top: 5px;padding-bottom: 25px;"><h3>Palatal</h3></td></tr>
+              <tr><td style="padding-top: 20px;">Gingival margin</td></tr>
+              <tr><td style="padding-top: 5px;">Probing depth</td></tr>
+              <tr><td style="padding-top: 3px;">Plaque</td></tr>
+              <tr><td style="padding-top: 8px;">Bleeding on probing</td></tr>
+              <tr><td style="padding-top: 13px;">Furcation</td></tr>
+            </table>
+                  </div>
+          @for (toothNumber of leftUpperTeeth_L; track toothNumber) {
+            <app-tooth-display [toothNumber]="toothNumber"></app-tooth-display>
+            @if (toothNumber === '11_L') {
+              <div class="tooth-gap"></div>
+            }
+          }
+          @for (toothNumber of rightUpperTeeth_L; track toothNumber) {
+            <app-tooth-display [toothNumber]="toothNumber"></app-tooth-display>
+          }
+        </div>
+      </div>
+    </div>
+    
+    <!-- Lower Jaw -->
+    <div class="dental-arch lower-jaw">
+      <div class="arch-label">Lower jaw</div>
+      <div class="tooth-section">
+        <!-- Normal Teeth Row -->
+        <div class="tooth-row normal-teeth">
+          <div style="position: relative;">
+            <table style="position: absolute;left: -200px; width: 190px;padding-top: 40px;text-align: right;">
+              <tr><td></td></tr>
+              <tr><td>Mobility</td></tr>
+              <tr><td>Implant</td></tr>
+              <tr><td style="padding-top: 10px;">Furcation</td></tr>
+              <tr><td style="padding-top: 8px;">Bleeding on probing</td></tr>
+              <tr><td style="padding-top: 5px;">Plaque</td></tr>
+              <tr><td style="padding-top: 10px;">Gingival margin</td></tr>
+              <tr><td style="padding-top: 12px;">Probing depth</td></tr>
+              <tr><td style="padding-top: 50px;"><h3>Lingual</h3></td></tr>
+            </table>
+                  </div>
+          @for (toothNumber of leftLowerTeeth; track toothNumber) {
+            <app-tooth-display [toothNumber]="toothNumber"></app-tooth-display>
+            @if (+toothNumber === 41) {
+              <div class="tooth-gap"></div>
+            }
+          }
+          @for (toothNumber of rightLowerTeeth; track toothNumber) {
+            <app-tooth-display [toothNumber]="toothNumber"></app-tooth-display>
+          }
+        </div>
+        
+        <!-- Lingual Teeth Row -->
+        <div class="tooth-row lingual-teeth">
+          <div style="position: relative;">
+            <table style="position: absolute;left: -200px; width: 190px;padding-top: 40px;text-align: right;">
+              <tr><td style="padding-top: 0px;padding-bottom: 30px;"><h3>Buccal</h3></td></tr>
+              <tr><td style="padding-top: 20px;">Gingival margin</td></tr>
+              <tr><td style="padding-top: 5px;">Probing depth</td></tr>
+              <tr><td style="padding-top: 3px;">Plaque</td></tr>
+              <tr><td style="padding-top: 8px;">Bleeding on probing</td></tr>
+            </table>
+                  </div>
+          @for (toothNumber of leftLowerTeeth_L; track toothNumber) {
+            <app-tooth-display [toothNumber]="toothNumber"></app-tooth-display>
+            @if (toothNumber === '41_L') {
+              <div class="tooth-gap"></div>
+            }
+          }
+          @for (toothNumber of rightLowerTeeth_L; track toothNumber) {
+            <app-tooth-display [toothNumber]="toothNumber"></app-tooth-display>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="zoom-controls" role="group" aria-label="Chart zoom">
+    <button type="button" (click)="zoomOut()" [disabled]="zoomLevel - zoomStep < minZoom" aria-label="Zoom out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/></svg></button>
+    <span>{{ zoomLevel }}%</span>
+    <button type="button" (click)="zoomIn()" [disabled]="zoomLevel + zoomStep > maxZoom" aria-label="Zoom in"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg></button>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --primary: #0f766e;
+  --primary-hover: #115e59;
+  --primary-soft: #ccfbf1;
+  --primary-tint: #f0fdfa;
+  --ink: #0f172a;
+  --ink-soft: #334155;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --surface: #ffffff;
+  --surface-muted: #f8fafc;
+  --plaque: #3b82f6;
+  --bleeding: #ef4444;
+  --furcation: #f97316;
+  --radius: 16px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --focus-ring: 0 0 0 3px rgba(20, 184, 166, 0.25);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Inter", sans-serif !important;
+  color: var(--ink);
+  background:
+    radial-gradient(900px 500px at 0% -10%, #d5f5ef 0%, transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, #e0efff 0%, transparent 55%),
+    #f4f7fa;
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: "Montserrat", sans-serif !important;
+}

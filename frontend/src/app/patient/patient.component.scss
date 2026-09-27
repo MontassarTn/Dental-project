@@ -1,0 +1,188 @@
+.patient-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    box-sizing: border-box;
+}
+
+.patient-form-container {
+    width: 100%;
+    max-width: 480px;
+    padding: 40px;
+    box-sizing: border-box;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+
+    @media (max-width: 480px) {
+        padding: 28px 20px;
+    }
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+
+    .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        background: var(--primary-tint);
+        color: var(--primary);
+        border: 1px solid var(--primary-soft);
+    }
+
+    .brand-name {
+        font-weight: 700;
+        font-size: 1rem;
+        color: var(--ink);
+        letter-spacing: -0.01em;
+    }
+}
+
+.form-title {
+    margin: 0 0 6px;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+}
+
+.form-subtitle {
+    margin: 0 0 28px;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.patient-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+
+        @media (max-width: 480px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--ink-soft);
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            height: 44px;
+            padding: 0 14px;
+            font: inherit;
+            font-size: 0.95rem;
+            color: var(--ink);
+            background: var(--surface-muted);
+            border: 1px solid var(--border-strong);
+            border-radius: 10px;
+            transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+
+            &::placeholder {
+                color: #94a3b8;
+            }
+
+            &:hover {
+                border-color: #94a3b8;
+            }
+
+            &:focus {
+                outline: none;
+                background: var(--surface);
+                border-color: var(--primary);
+                box-shadow: var(--focus-ring);
+            }
+
+            // Only flag empty required fields once the user has left them
+            &.ng-invalid.ng-touched {
+                border-color: var(--bleeding);
+                background: #fef2f2;
+            }
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+    }
+
+    .form-error {
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+        font-size: 0.875rem;
+    }
+
+    .submit-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 48px;
+        margin-top: 6px;
+        font: inherit;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #fff;
+        background: var(--primary);
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(15, 118, 110, 0.28);
+        transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+
+        svg {
+            transition: transform 0.2s;
+        }
+
+        &:hover:not(:disabled) {
+            background: var(--primary-hover);
+            box-shadow: 0 8px 20px rgba(15, 118, 110, 0.35);
+
+            svg {
+                transform: translateX(3px);
+            }
+        }
+
+        &:focus-visible {
+            outline: none;
+            box-shadow: var(--focus-ring), 0 6px 16px rgba(15, 118, 110, 0.28);
+        }
+
+        &:active:not(:disabled) {
+            transform: scale(0.98);
+        }
+
+        &:disabled {
+            background: #94a3b8;
+            box-shadow: none;
+            cursor: progress;
+        }
+    }
+}

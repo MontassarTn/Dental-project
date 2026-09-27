@@ -1,0 +1,451 @@
+.tooth-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .tooth-contient{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70px;
+  margin: 10px 2px;
+  padding: 10px 2px;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  transition: background-color 0.2s, border-color 0.2s;
+}
+  .tooth-number {
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--ink-soft);
+      margin-bottom: 5px;
+      text-align: center;
+      width: 100%;
+    }
+    .top-controls-row {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      width: 100%;
+      margin-bottom: 5px;
+      gap: 5px;
+      align-items: center;
+      .mobility-indicator,
+      .implant-checkbox {
+        width: 80%;
+        height: 20px;
+        font-size: 10px;
+      }
+    }
+  }
+  
+  .tooth-area {
+    cursor: pointer;
+    width: 70%;
+    margin-bottom: 3px;
+    height: 125px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .tooth-image-container {
+    position: relative;
+    display: inline-block;
+    height: 116px;
+  }
+  
+  .tooth-image {
+    max-width: 100%;
+    height: auto;
+    transition: opacity 0.3s;
+  
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+  
+  .missing-tooth {
+    width: 50px;
+    height: 50px;
+    border: 2px dashed #fca5a5;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    
+    span {
+      color: var(--bleeding);
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+  
+  .controls-row {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 5px;
+    gap: 5px;
+  
+    // Adjust the layout when implant and mobility are hidden
+    &:has(.implant-checkbox:not(:defined)) {
+      justify-content: center;
+    }
+    
+  }
+  
+  /* Furcation Styles */
+  .furcation-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    pointer-events: none;
+    
+    &.level-1 {
+      border: 2px solid var(--furcation);
+      border-radius: 50%;
+    }
+    
+    &.level-2 {
+      border: 2px solid var(--furcation);
+      border-radius: 50%;
+      border-top-color: transparent;
+      border-right-color: transparent;
+    }
+    
+    &.level-3 {
+      border: 2px solid var(--furcation);
+      border-radius: 50%;
+      background-color: rgba(249, 115, 22, 0.18);
+    }
+  }
+  
+  .furcation-button {
+    width: 80%;
+    height: 20px;
+    background-color: var(--surface-muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--ink-soft);
+    &:first-child {
+      margin-right: 0px;
+    }
+    &:hover:not(.disabled) {
+      background-color: var(--primary-soft);
+      border-color: #5eead4;
+      color: var(--primary);
+    }
+  
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      color: #999;
+    }
+  }
+  .implant-checkbox, .mobility-indicator {
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+  /* Implant Checkbox */
+  .implant-checkbox {
+    width: 20px;
+    height: 20px;
+    background-color: var(--surface-muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--ink-soft);
+  
+    &:hover:not(.disabled) {
+      background-color: var(--primary-soft);
+      border-color: #5eead4;
+      color: var(--primary);
+    }
+    &.checked {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      &:hover:not(.disabled) {
+        background-color: var(--primary-hover);
+      }
+    }
+  
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  /* Mobility Indicator */
+  .mobility-indicator {
+    width: 20px;
+    height: 20px;
+    background-color: var(--surface-muted);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    cursor: pointer;
+  
+    &:hover:not(.disabled) {
+      background-color: var(--primary-soft);
+      border-color: #5eead4;
+      color: var(--primary);
+    }
+  
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  
+  /* Mobility Popup */
+  .mobility-popup {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 5px;
+    z-index: 100;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+    display: flex;
+    gap: 5px;
+  }
+  
+  .mobility-option {
+    width: 20px;
+    height: 20px;
+    background-color: var(--surface-muted);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    cursor: pointer;
+  
+    &:hover {
+      background-color: var(--primary-soft);
+      color: var(--primary);
+    }
+
+
+  }
+  .bleeding-controls {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin: 3px 0;
+    gap: 5px;
+  }
+  
+  .bleeding-checkbox {
+    width: 14px;
+    height: 18px;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    cursor: pointer;
+    color: transparent;
+    background-color: white;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: #fee2e2;
+    }
+    
+    &.active {
+      background-color: var(--bleeding);
+      border-color: var(--bleeding);
+      color: white;
+    }
+    
+    &:nth-child(2) { // Mid checkbox
+      font-size: 12px;
+      line-height: 12px;
+    }
+    
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+  }
+  .plaque-controls {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+    margin: 3px 0;
+  }
+  
+  .plaque-checkbox {
+    width: 14px;
+    height: 18px;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    cursor: pointer;
+    color: transparent;
+    background-color: white;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background-color: #dbeafe;
+    }
+    
+    &.active {
+      background-color: var(--plaque);
+      border-color: var(--plaque);
+      color: white;
+    }
+    
+    &:nth-child(2) { /* Mid checkbox */
+      font-size: 12px;
+      line-height: 12px;
+    }
+    
+    &[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+  .gingival-margin-controls {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .gingival-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30px;
+  
+    label {
+      font-size: 12px;
+      margin-bottom: 2px;
+      font-weight: bold;
+      color: #555;
+    }
+  
+    input {
+      width: calc(100% - 2px);
+      padding: 2px;
+      text-align: center;
+      border: 0px solid #ddd;
+      border-radius: 4px;
+      background-color: var(--surface-muted);
+      color: var(--ink);
+      font-weight: 600;
+      -moz-appearance: textfield;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      &:hover {
+        background-color: var(--primary-tint);
+      }
+      &:focus {
+        outline: none;
+        background-color: var(--surface);
+        box-shadow: 0 0 0 2px var(--primary);
+      }
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        -moz-appearance: textfield;
+      }
+    }
+  }
+  .probing-depth-controls {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 5px 0;
+  }
+  
+  .probing-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30px;
+  
+    label {
+      font-size: 12px;
+      margin-bottom: 2px;
+      font-weight: bold;
+      color: #555;
+    }
+  
+    input {
+      width: calc(100% - 2px);
+      padding: 2px;
+      text-align: center;
+      border: 0px solid #ddd;
+      border-radius: 4px;
+      background-color: var(--surface-muted);
+      color: var(--ink);
+      font-weight: 600;
+      -moz-appearance: textfield;
+      transition: background-color 0.2s, box-shadow 0.2s;
+      &:hover {
+        background-color: var(--primary-tint);
+      }
+      &:focus {
+        outline: none;
+        background-color: var(--surface);
+        box-shadow: 0 0 0 2px var(--primary);
+      }
+      &::-webkit-outer-spin-button,
+      &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+        -moz-appearance: textfield;
+      }
+    }
+  }
+  
+  .rotate-180 {
+    transform: rotate(180deg);
+  }
+  
+
+:host(:hover) .tooth-contient {
+  background: var(--primary-tint);
+  border-color: var(--primary-soft);
+}

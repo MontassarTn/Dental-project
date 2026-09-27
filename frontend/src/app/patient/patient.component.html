@@ -1,0 +1,46 @@
+<div class="patient-page">
+    <div class="patient-form-container">
+        <div class="brand">
+            <span class="brand-mark">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M7 3C4.8 3 3 4.8 3 7.5c0 3 .8 5.2 1.6 7.3.7 1.9 1 4.2 1.6 5.9.3.9 1.6 1 2 .1.6-1.4.9-3.3 1.5-4.6.3-.7.8-1.2 1.3-1.2s1 .5 1.3 1.2c.6 1.3.9 3.2 1.5 4.6.4.9 1.7.8 2-.1.6-1.7.9-4 1.6-5.9.8-2.1 1.6-4.3 1.6-7.3C21 4.8 19.2 3 17 3c-1.9 0-3 1-5 1S8.9 3 7 3z"/>
+                </svg>
+            </span>
+            <span class="brand-name">Dental Project</span>
+        </div>
+
+        <h1 class="form-title">Patient Information</h1>
+        <p class="form-subtitle">Enter the patient's details to open their periodontal chart.</p>
+
+        <form (ngSubmit)="handleSubmit()" class="patient-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" [(ngModel)]="firstName" name="firstName" placeholder="John" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" [(ngModel)]="lastName" name="lastName" placeholder="Doe" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="patientId">Patient ID</label>
+                <input type="text" id="patientId" [(ngModel)]="patientId" name="patientId" placeholder="PAT001" required>
+                <span class="hint">Using an existing ID opens that patient's saved chart.</span>
+            </div>
+
+            @if (errorMessage) {
+                <div class="form-error" role="alert">{{ errorMessage }}</div>
+            }
+
+            <button type="submit" class="submit-btn" [disabled]="isLoading">
+                {{ isLoading ? 'Opening chart…' : 'Continue to Dental Chart' }}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+</div>

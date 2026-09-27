@@ -1,0 +1,21 @@
+{
+  "name": "dental-project-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "REST API and live WebSocket updates for the periodontal chart",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^18.0.4",
+    "express": "^4.21.2",
+    "mongoose": "^8.13.0",
+    "ws": "^8.18.1"
+  }
+}
