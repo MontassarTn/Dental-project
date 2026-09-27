@@ -20,10 +20,11 @@ browser mic ──audio──▶ /transcribe ──▶ AssemblyAI (speech-to-tex
 | `app/main.py` | FastAPI app: `/transcribe` WebSocket and `/memory` endpoints |
 | `app/transcription.py` | Streams audio to AssemblyAI and returns transcripts (dental vocabulary lives here) |
 | `app/llm.py` | Sends each finished sentence to Groq and saves the extracted findings |
-| `app/memory.py` | Dictation memory per patient, kept across recordings (finish a sentence later) |
+| `app/memory.py` | Dictation memory per patient, stored in MongoDB (finish a sentence later, even after a restart) |
 | `app/replies.py` | Builds the spoken confirmation ("Done. Tooth 11: marked as missing.") from what was saved |
 | `app/prompts.py` | The LLM prompts (rephrase with context, then JSON extraction) |
 | `app/teeth_repository.py` | Applies a finding to a tooth document in MongoDB |
+| `app/database.py` | The MongoDB connection (`dentalChart` database, shared with the backend) |
 | `app/config.py` | Reads settings from `.env` |
 
 ## Setup
@@ -50,5 +51,6 @@ The frontend expects the service on `http://localhost:5000`. For deployment on R
 - `GET /health` - `{"status": "ok"}`, health check.
 - `GET /memory/{patientId}` - what the assistant remembers for this patient: `{"turns": [{"said", "reply"}]}`.
   Kept across recordings, so "Tooth 12 and 13" ... (stop, start) ... "are missing" marks both teeth missing.
-  The last 12 sentences per patient are kept, in memory (cleared when the service restarts).
+  Stored in the `dictations` collection, so it survives restarts and redeploys. The latest 12
+  sentences per patient are used as context and returned here.
 - `DELETE /memory/{patientId}` - forget it (the transcript "Clear" button).

@@ -2,6 +2,7 @@
 import asyncio
 import logging
 from collections.abc import Awaitable, Callable
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,7 +14,14 @@ from app.transcription import relay
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("app")
 
-app = FastAPI(title="Dental Project speech service")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await asyncio.to_thread(memory.create_indexes)
+    yield
+
+
+app = FastAPI(title="Dental Project speech service", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -46,15 +54,18 @@ class TranscriptQueue:
         while (transcript := await self._queue.get()) is not None:
             extracted = ""
             try:
-                extracted, results = await process_transcript(
-                    transcript, memory.chat_history(patient_key), self.patient_id
-                )
+                history = await asyncio.to_thread(memory.chat_history, patient_key)
+                extracted, results = await process_transcript(transcript, history, self.patient_id)
                 reply = build_reply(results)
             except Exception:
                 log.exception("LLM processing failed for: %s", transcript)
                 reply = error_reply()
             # Remembered even when nothing was charted, so the sentence can be completed later
-            memory.remember(patient_key, memory.Turn(said=transcript, extracted=extracted, reply=reply))
+            try:
+                turn = memory.Turn(said=transcript, extracted=extracted, reply=reply)
+                await asyncio.to_thread(memory.remember, patient_key, turn)
+            except Exception:
+                log.exception("Could not save the dictation memory")
             log.info("Reply: %s", reply or "(nothing charted)")
             await self._send({"type": "reply", "text": reply, "speak": bool(reply)})
 
@@ -100,11 +111,12 @@ async def health():
 @app.get("/memory/{patient_id}")
 async def get_memory(patient_id: str):
     """What the assistant remembers for this patient (shown as the transcript history)."""
-    return {"turns": [{"said": t.said, "reply": t.reply} for t in memory.turns(patient_id)]}
+    turns = await asyncio.to_thread(memory.turns, patient_id)
+    return {"turns": [{"said": t.said, "reply": t.reply} for t in turns]}
 
 
 @app.delete("/memory/{patient_id}")
 async def clear_memory(patient_id: str):
     """Forget this patient's dictation context (the transcript "Clear" button)."""
-    memory.forget(patient_id)
+    await asyncio.to_thread(memory.forget, patient_id)
     return {"status": "memory cleared"}

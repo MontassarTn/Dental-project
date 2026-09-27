@@ -4,13 +4,11 @@ The backend watches this collection and pushes every change to the chart in the 
 """
 import logging
 
-from pymongo import MongoClient
-
-from app.config import MONGODB_URI
+from app.database import db
 
 log = logging.getLogger(__name__)
 
-_teeth = MongoClient(MONGODB_URI)["dentalChart"]["tooths"]
+_teeth = db["tooths"]
 
 # LLM field names -> field names used in the database
 FIELD_NAME_MAP = {

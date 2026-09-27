@@ -34,7 +34,8 @@ instruments down, look away from the patient, or write anything on paper.
   "I couldn't find tooth 19." The answer is built from what was actually saved in the database,
   never from free LLM text, so it only confirms what really happened.
 - **It remembers the conversation.** Say "Tooth 12 and 13", stop, and later say "are missing":
-  both teeth are marked missing. The memory is kept per patient and shown as the on-screen transcript.
+  both teeth are marked missing. The memory is kept per patient in MongoDB, so it survives
+  restarts, and it is shown as the on-screen transcript.
 - **Live transcript** of what it heard, next to each reply.
 - Everything can also be edited by hand on the chart.
 

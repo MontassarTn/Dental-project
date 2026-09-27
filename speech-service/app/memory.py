@@ -2,12 +2,20 @@
 
 Kept across recordings (stop / start), so a sentence can be finished later -
 "Tooth 12 and 13" ... "are missing" - and the LLM still knows which teeth are meant.
-Held in this service's memory: it is lost when the service restarts.
+Stored in MongoDB (collection "dictations"), so it survives restarts and redeploys of this
+service. Blocking calls: run them in a thread from async code.
 """
-from collections import deque
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
-MAX_TURNS = 12  # older sentences are forgotten
+from pymongo import ASCENDING, DESCENDING
+
+from app.database import db
+
+MAX_TURNS = 12  # only the latest sentences are used as LLM context and shown on screen
+
+_dictations = db["dictations"]
+_NEWEST_FIRST = [("createdAt", DESCENDING), ("_id", DESCENDING)]
 
 
 @dataclass
@@ -17,21 +25,30 @@ class Turn:
     reply: str      # what the assistant answered ("" = no chart change)
 
 
-_turns: dict[str, deque[Turn]] = {}
+def create_indexes() -> None:
+    _dictations.create_index([("patientId", ASCENDING), ("createdAt", DESCENDING)])
 
 
 def remember(patient_id: str, turn: Turn) -> None:
-    _turns.setdefault(patient_id, deque(maxlen=MAX_TURNS)).append(turn)
+    _dictations.insert_one({
+        "patientId": patient_id,
+        "said": turn.said,
+        "extracted": turn.extracted,
+        "reply": turn.reply,
+        "createdAt": datetime.now(timezone.utc),
+    })
 
 
 def turns(patient_id: str) -> list[Turn]:
-    return list(_turns.get(patient_id, ()))
+    """The latest MAX_TURNS sentences for this patient, oldest first."""
+    newest = _dictations.find({"patientId": patient_id}).sort(_NEWEST_FIRST).limit(MAX_TURNS)
+    return [Turn(d["said"], d["extracted"], d["reply"]) for d in reversed(list(newest))]
 
 
 def forget(patient_id: str) -> None:
-    _turns.pop(patient_id, None)
+    _dictations.delete_many({"patientId": patient_id})
 
 
 def chat_history(patient_id: str) -> str:
-    """The conversation in the "Human: ... / AI: ..." form the rephrase prompts expect."""
+    """The conversation in the "Human: ... / AI: ..." form the rephrase prompt expects."""
     return "\n".join(f"Human: {t.said}\nAI: {t.extracted}" for t in turns(patient_id))
