@@ -12,10 +12,18 @@ LLM (Groq) and our own voice output.
 
 ## The problem
 
-A periodontal exam records six sites on each of up to 32 teeth: probing depth, gingival margin,
-bleeding and plaque, plus mobility, furcation, implants and missing teeth. That is hundreds of
-values, and while taking them the dentist holds a probe and a mirror. So either an assistant
-types what the dentist calls out, or the dentist keeps stopping to type.
+When a dentist checks a patient's mouth, every tooth has findings to record: missing teeth,
+implants, mobility, bleeding, plaque, gum level and pocket depth at several points around the
+tooth. That is hundreds of values in one exam, and today they end up on paper. The dentist's
+hands are busy with the probe and the mirror, so they keep stopping the exam to write, and the
+paper chart still has to be typed into the computer afterwards.
+
+## The solution
+
+The dentist just speaks while checking the mouth ("Tooth 16, probing depth 3, 2, 4",
+"Teeth 12 and 13 are missing") and the app saves everything for them. The chart fills in live
+and the assistant confirms out loud what it recorded, so the dentist never has to put the
+instruments down, look away from the patient, or write anything on paper.
 
 ## What it does
 
