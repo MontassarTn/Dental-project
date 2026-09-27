@@ -28,7 +28,9 @@ instruments down, look away from the patient, or write anything on paper.
 ## What it does
 
 - **Speak naturally.** "Tooth 16, probing depth 3, 2, 4." / "Teeth 12 and 13 are missing." /
-  "Tooth 24, bleeding mesial and distal."
+  "Tooth 24, bleeding mesial and distal." / "Plaque in the front for tooth 47." Sites can be said as
+  mesial / mid / distal or front / middle / back; without a site ("Tooth 47 has plaque") the finding
+  applies to all three sites, and the spoken reply says so.
 - **The chart updates live** while you talk, on every screen showing that patient.
 - **The assistant answers out loud**: "Done. Tooth 16: probing depth 3, 2, 4." or
   "I couldn't find tooth 19." The answer is built from what was actually saved in the database,
